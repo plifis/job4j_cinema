@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>Cinema booking</title>
+</head>
+<body onload="loadTickets()"  onload="start()">
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js" ></script>
+<script>
+    function start() {
+        window.timerId = window.setInterval(loadTickets, 1000);
+    }
+</script>
+
+<script>
+    function redirectPayment() {
+       let seat = $('input:checked').val();
+       if (seat !== undefined) {
+           window.location.href = 'http://localhost:8080/cinema/payment.html?seat=' + seat;
+       } else {
+           alert("Выберите пожалуйста место");
+       }
+    }
+</script>
+<script>
+  function loadTickets() {
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:8080/cinema/hall.do",
+            data_type: "json"
+        }).done(function (data) {
+            let arrJson = JSON.parse(data);
+            for (let i = 0; i < arrJson.length; i++) {
+                let row = arrJson[i].row;
+                let cell = arrJson[i].cell;
+                let str = row + "_" + cell;
+                $('input').each(
+                    function () {
+                    let val = $(this).attr('value');
+                        if ( val === str) {
+                             $(this).parent().css('color', 'red').text("Место занято");
+                        }
+                    })
+            }
+        }).fail(function () {
+            alert('Что-то пошло не так');
+        })
+  }
+</script>
+
+<div class="container">
+    <div class="row pt-3">
+        <h4>
+            Бронирование места на сеанс
+        </h4>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th style="width: 120px;">Ряд / Место</th>
+                <th>1</th>
+                <th>2</th>
+                <th>3</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <th>1</th>
+                <td><input type="radio" name="place" value="1_1"> Ряд 1, Место 1</td>
+                <td><input type="radio" name="place" value="1_2"> Ряд 1, Место 2</td>
+                <td><input type="radio" name="place" value="1_3"> Ряд 1, Место 3</td>
+            </tr>
+            <tr>
+                <th>2</th>
+                <td><input type="radio" name="place" value="2_1"> Ряд 2, Место 1</td>
+                <td><input type="radio" name="place" value="2_2"> Ряд 2, Место 2</td>
+                <td><input type="radio" name="place" value="2_3"> Ряд 2, Место 3</td>
+            </tr>
+            <tr>
+                <th>3</th>
+                <td><input type="radio" name="place" value="3_1"> Ряд 3, Место 1</td>
+                <td><input type="radio" name="place" value="3_2"> Ряд 3, Место 2</td>
+                <td><input type="radio" name="place" value="3_3"> Ряд 3, Место 3</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="container">
+        <div class="row float-right">
+            <button type="button" class="btn btn-success" onclick="redirectPayment()">Оплатить</button>
+        </div>
+    <div class="row">
+        <a href="cancel.html" class="btn btn-success">Отменить бронь</a>
+    </div>
+    </div>
+</body>
+</html>
