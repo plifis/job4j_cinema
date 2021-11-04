@@ -1,6 +1,5 @@
-# job4j_cinema
-Система бронирования мест в кинотеатре.
-Используемые технологии: Servlets, JDBC, Ajax, SQL
+## Система бронирования мест в кинотеатре.
+### Используемые технологии: Servlets, JDBC, Ajax, SQL, HTML (CSS)
 
 ![Screenshot](images/1.PNG)
 ![Screenshot](images/2.PNG)
